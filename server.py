@@ -19,7 +19,12 @@ def dict_factory(cursor, row):
 def error404(error):
     return("<html><body><p>Nothin' to see here...</p></body><html>")
 
-## these routes catch valid http requests and return the appropriate templates/pages
+# internal server error
+@error(500)
+def error500(error):
+    return("<html><body><p>Oops, something went wrong!</p></body></html>")
+
+## these routes (below) catch valid http requests and return the appropriate templates/pages
 
 # home page
 @route('/')

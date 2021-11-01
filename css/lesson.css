@@ -1,3 +1,8 @@
 img {
     width: 50%;
 }
+
+span[data-audio-url] {
+    color: green;
+    font-weight: bold;
+}

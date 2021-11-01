@@ -1,5 +1,6 @@
 % rebase('tpl/base.tpl')
-<link rel="stylesheet" href="/css/lesson.css">
+<link rel="stylesheet" href="/css/lesson.css"></link>
+<script src="/js/initSounds.js"></script>
 
 {{ !entry }}
 

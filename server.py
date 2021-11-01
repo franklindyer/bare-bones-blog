@@ -5,7 +5,7 @@ import markdown
 
 # sqlite plugin for bottle routes
 from bottle_sqlite import SQLitePlugin
-install(SQLitePlugin(dbfile='blog.db'))
+install(SQLitePlugin(dbfile='course.db'))
 
 # turns SQL query results into dictionaries
 def dict_factory(cursor, row):
@@ -30,25 +30,35 @@ def error500(error):
 @route('/')
 def index(db): # the SQL database is passed to the route so that information about posts can appear on the homepage
 
-    # get the 10 most recent blog entries
-    recent = db.execute('SELECT * FROM entries ORDER BY created DESC LIMIT 5')
+    # get all non-hidden units, ordered by level
+    units = db.execute('SELECT * FROM units WHERE hidden = 0 ORDER BY level ASC')
     
-    # return the homepage template, passing it some recent posts
-    return template('tpl/index.tpl', recent=recent)
+    # return the homepage template, passing it the list of units
+    return template('tpl/home.tpl', units=units)
 
-# specific markdown blog post
-@route('/post/<post_id>')
-def index(db, post_id): # the SQL database is passed so that the function can find the post with the given id
+@route('/unit/<unit_id>')
+def index(db, unit_id):
+    
+    # get the lessons of the given unit, so long as they aren't hidden
+    unit = list(db.execute('SELECT * FROM units WHERE id = ? AND hidden = 0', (unit_id,)))[0]
+    lessons = db.execute('SELECT * FROM lessons WHERE unit = ? AND hidden = 0 ORDER BY level ASC', (unit_id,))
+
+    # return the template for a unit page, passing lessons from that unit
+    return template('tpl/unit.tpl', lessons=lessons, unit=unit)
+
+# specific lesson, could be markdown or html
+@route('/lesson/<lesson_id>')
+def index(db, lesson_id): # the SQL database is passed so that the function can find the post with the given id
 
     # turns query results into dictionaries
     db.row_factory = dict_factory
 
-    # get the blog entry with the given id
-    result = db.execute("SELECT * FROM entries WHERE id = ?", (post_id,))
-    post = result.fetchone()
+    # get the lesson with the given id
+    result = db.execute("SELECT * FROM lessons WHERE id = ? AND hidden = 0", (lesson_id,))
+    lesson = result.fetchone()
 
-    # open the corresponding markdown file
-    f = open("entries/" + post["filename"] + ".md", "r")
+    # open the corresponding file (file ending must be specified)
+    f = open("entries/" + lesson["filename"], "r")
 
     # convert the markdown to html
     proc = markdown.Markdown()
@@ -57,7 +67,7 @@ def index(db, post_id): # the SQL database is passed so that the function can fi
     entry = proc.convert(fr)
 
     # return the post template, passing in the entry content and title
-    return template('tpl/post.tpl', entry=entry, title=post['name'])
+    return template('tpl/lesson.tpl', entry=entry, title=lesson['name'])
 
 # other files, like css, images, javascript, etc.
 @get("/<dir:re:(css|img|js|file)>/<filename>")

@@ -1,10 +1,10 @@
 <div>
 
-    <h3>Recent Posts</h3>
+    <h3>Lessons about "{{ unit['name'] }}"</h3>
 
     <ul>
 
-    % for lesson in unit:
+    % for lesson in lessons:
         <li>
             <a href="/lesson/{{ lesson['id'] }}">{{ lesson['name'] }}</a>
         </li>

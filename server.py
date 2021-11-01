@@ -67,7 +67,7 @@ def index(db, lesson_id): # the SQL database is passed so that the function can 
     entry = proc.convert(fr)
 
     # return the post template, passing in the entry content and title
-    return template('tpl/lesson.tpl', entry=entry, title=lesson['name'])
+    return template('tpl/lesson.tpl', entry=entry, title=lesson['name'], unit=lesson['unit'])
 
 # other files, like css, images, javascript, etc.
 @get("/<dir:re:(css|img|js|file)>/<filename>")

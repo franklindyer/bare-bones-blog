@@ -13,3 +13,7 @@
     </ul>
 
 </div>
+
+<br/>
+
+<a href="/">Go home</a>

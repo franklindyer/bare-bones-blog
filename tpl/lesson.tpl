@@ -3,4 +3,8 @@
 
 {{ !entry }}
 
-% include('tpl/footer.tpl')
+<br/>
+<a href="/unit/{{ unit }}">Back to unit</a>
+
+<br/>
+<a href="/">Go home</a>

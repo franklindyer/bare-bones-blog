@@ -31,20 +31,25 @@ def error500(error):
 def index(db): # the SQL database is passed to the route so that information about posts can appear on the homepage
 
     # get all non-hidden units, ordered by level
-    units = db.execute('SELECT * FROM units WHERE hidden = 0 ORDER BY level ASC')
+    units = db.execute('SELECT * FROM units WHERE hidden = 0 AND superunit = 0 ORDER BY level ASC')
     
     # return the homepage template, passing it the list of units
     return template('tpl/home.tpl', units=units)
 
 @route('/unit/<unit_id>')
 def index(db, unit_id):
-    
+   
+    db.row_factory = dict_factory
+ 
     # get the lessons of the given unit, so long as they aren't hidden
     unit = list(db.execute('SELECT * FROM units WHERE id = ? AND hidden = 0', (unit_id,)))[0]
+    subunit_query = 'SELECT * FROM units WHERE superunit = ? AND hidden = 0 ORDER BY level ASC'
+    subunits = db.execute(subunit_query, (unit_id,))
+    subunits = list(subunits)
     lessons = db.execute('SELECT * FROM lessons WHERE unit = ? AND hidden = 0 ORDER BY level ASC', (unit_id,))
 
     # return the template for a unit page, passing lessons from that unit
-    return template('tpl/unit.tpl', lessons=lessons, unit=unit)
+    return template('tpl/unit.tpl', lessons=lessons, unit=unit, subunits=subunits)
 
 # specific lesson, could be markdown or html
 @route('/lesson/<lesson_id>')

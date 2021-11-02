@@ -12,6 +12,20 @@
 
     </ul>
 
+    % if subunits != []:
+    <h3>Subunits of "{{ unit['name'] }}"</h3>
+
+    <ul>
+
+    % for subunit in subunits:
+        <li>
+            <a href="/unit/{{ subunit['id'] }}">{{ subunit['name'] }}</a>
+        </li>
+    % end
+
+    </ul>
+    % end
+
 </div>
 
 <br/>

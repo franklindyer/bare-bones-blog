@@ -1,5 +1,15 @@
-A bare-bones blog skeleton.
+This is a bare-bones blog skeleton.
 
-To create a new markdown post, add your markdown file to the `entries` folder. Then you need to add some information about this post into your database `blog.db`, in the table `entries`. You can do this using a command like `INSERT INTO entries (name, filename) VALUES ("Name of Post", "name_of_markdown_file");`. When you do this, the post will automatically be assigned an id and a timestamp.
+Here's what you need to know to use it:
+- Entries are markdown files in `/web/entries` and are served at `/<post_id>`.
+- Static resources are stored in `/web/img`, `/web/css`, `/web/js` and are served at `/<type>/<name>`.
+- Post metadata is stored in `/web/blog.db`. Run `.schema` in sqlite3 for a list of tables/columns.
 
-Additional static resources, like images, css stylesheets, and javascript, are served at the paths `/img`, `/css`, and `/js`, and they draw from the folders `img`, `css`, and `js`. 
+It is recommended to run this app using Docker. You can do this using the following steps:
+- Install Docker.
+- Clone this repository.
+- Run `docker run -p <your_port>:8080 -v ./web:/data/app/web frpzzd/bare-bones-blog:latest`.
+	- `-p <your_port>:8080` binds port `8080` of the container to `<your_port>` on your machine
+	- `-v ./web:/data/app/web` binds the directory `./web` of this repo to `/data/app/web` in the container
+	- `frpzzd/bare-bones-blog:latest` is my personal build of this project
+- Visit (or curl) `http://localhost:<your_port>` on the same machine as the one running the app.

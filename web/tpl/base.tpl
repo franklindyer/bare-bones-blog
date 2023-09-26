@@ -9,7 +9,7 @@
 
     <body>
 
-        % include('tpl/header.tpl')
+        % include('web/tpl/header.tpl')
         {{ !base }}
 
     </body>

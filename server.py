@@ -2,10 +2,11 @@ from bottle import route, run, template, static_file, error, redirect, request, 
 import os
 import datetime
 import markdown
+import sys
 
 # sqlite plugin for bottle routes
 from bottle_sqlite import SQLitePlugin
-install(SQLitePlugin(dbfile='blog.db'))
+install(SQLitePlugin(dbfile='/data/app/web/blog.db'))
 
 # turns SQL query results into dictionaries
 def dict_factory(cursor, row):
@@ -22,9 +23,13 @@ def error404(error):
 # internal server error
 @error(500)
 def error500(error):
-    return("<html><body><p>Oops, something went wrong!</p></body></html>")
+    return template("<html><body><p>Oops, something went wrong! {{error}}</p></body></html>", error=str(error))
 
 ## these routes (below) catch valid http requests and return the appropriate templates/pages
+
+@route('/test')
+def testy():
+    return "Testy testy!"
 
 # home page
 @route('/')
@@ -34,7 +39,7 @@ def index(db): # the SQL database is passed to the route so that information abo
     recent = db.execute('SELECT * FROM entries ORDER BY created DESC LIMIT 5')
     
     # return the homepage template, passing it some recent posts
-    return template('tpl/index.tpl', recent=recent)
+    return template('/data/app/web/tpl/index.tpl', recent=recent)
 
 # specific markdown blog post
 @route('/post/<post_id>')
@@ -48,7 +53,7 @@ def index(db, post_id): # the SQL database is passed so that the function can fi
     post = result.fetchone()
 
     # open the corresponding markdown file
-    f = open("entries/" + post["filename"] + ".md", "r")
+    f = open("web/entries/" + post["filename"] + ".md", "r")
 
     # convert the markdown to html
     proc = markdown.Markdown()
@@ -57,13 +62,13 @@ def index(db, post_id): # the SQL database is passed so that the function can fi
     entry = proc.convert(fr)
 
     # return the post template, passing in the entry content and title
-    return template('tpl/post.tpl', entry=entry, title=post['name'])
+    return template('/data/app/web/tpl/post.tpl', entry=entry, title=post['name'])
 
 # other files, like css, images, javascript, etc.
 @get("/<dir:re:(css|img|js|file)>/<filename>")
 def serve_image(dir, filename):
-    return static_file(filename, root=dir)
+    return static_file(filename, root="/data/app/web/"+dir)
 
-# run the server and listen on port 4000
-run(host="localhost", port=4000, debug=True, reloader=True)
-run
+# run the server and listen on port 8080
+portnum = int(sys.argv[1])
+run(host="0.0.0.0", port=portnum, debug=True, reloader=True)

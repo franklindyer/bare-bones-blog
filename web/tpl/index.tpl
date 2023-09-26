@@ -1,4 +1,4 @@
-% rebase('tpl/base.tpl')
+% rebase('web/tpl/base.tpl')
 
 <h3>My Blog</h3>
 
@@ -6,4 +6,4 @@
 
 <p>I have nothing else to say.</p>
 
-% include("tpl/recent.tpl")
+% include("web/tpl/recent.tpl")

@@ -9,8 +9,9 @@ It is recommended to run this app using Docker. You can do this quickly using th
 - Install Docker.
 - Clone this repository.
 - Change directory into the cloned repo.
-- Run `docker run -p <your_port>:8080 -v ./web:/data/app/web frpzzd/bare-bones-blog:latest`.
+- Run `docker run -p <your_port>:8080 -v ./web:/data/app/web -d frpzzd/bare-bones-blog:latest`.
 	- `-p <your_port>:8080` binds port `8080` of the container to `<your_port>` on your machine
 	- `-v ./web:/data/app/web` binds the directory `./web` of this repo to `/data/app/web` in the container
+	- `-d` runs the container in the background and prints the container ID
 	- `frpzzd/bare-bones-blog:latest` is my personal build of this project
 - Visit (or curl) `http://localhost:<your_port>` on the same machine as the one running the app.

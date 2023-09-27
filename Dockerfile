@@ -12,7 +12,7 @@ ENV PORT 8080
 
 RUN apt-get -y update
 RUN apt-get install -y sqlite3 libsqlite3-dev
-RUN python3 -m pip install bottle markdown bottle_sqlite
+RUN python3 -m pip install bottle markdown bottle_sqlite python-markdown-math
 
 COPY ./server.py $AP/
 

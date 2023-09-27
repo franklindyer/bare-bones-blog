@@ -63,7 +63,7 @@ def index(db, post_id): # the SQL database is passed so that the function can fi
 def posts(db):
 
     db.row_factory = dict_factory
-    result = db.execute("SELECT * FROM entries ORDER BY created DESC")
+    result = db.execute("SELECT * FROM entries WHERE created IS NOT NULL ORDER BY created DESC")
     posts = result.fetchall()
 
     return template('/data/app/web/tpl/posts.tpl', posts=posts)

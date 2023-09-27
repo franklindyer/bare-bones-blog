@@ -23,13 +23,7 @@ def error404(error):
 # internal server error
 @error(500)
 def error500(error):
-    return template("<html><body><p>Oops, something went wrong! {{error}}</p></body></html>", error=str(error))
-
-## these routes (below) catch valid http requests and return the appropriate templates/pages
-
-@route('/test')
-def testy():
-    return "Testy testy!"
+    return("<html><body><p>Oops, something went wrong!</p></body></html>")
 
 # home page
 @route('/')
@@ -56,13 +50,23 @@ def index(db, post_id): # the SQL database is passed so that the function can fi
     f = open("web/entries/" + post["filename"] + ".md", "r")
 
     # convert the markdown to html
-    proc = markdown.Markdown()
+    proc = markdown.Markdown(extensions=['mdx_math'])
     fr = f.read()
     f.close()
     entry = proc.convert(fr)
 
     # return the post template, passing in the entry content and title
     return template('/data/app/web/tpl/post.tpl', entry=entry, title=post['name'])
+
+# post display route
+@route('/posts')
+def posts(db):
+
+    db.row_factory = dict_factory
+    result = db.execute("SELECT * FROM entries ORDER BY created DESC")
+    posts = result.fetchall()
+
+    return template('/data/app/web/tpl/posts.tpl', posts=posts)
 
 # other files, like css, images, javascript, etc.
 @get("/<dir:re:(css|img|js|file)>/<filename>")

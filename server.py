@@ -50,7 +50,7 @@ def index(db, post_id): # the SQL database is passed so that the function can fi
     f = open("web/entries/" + post["filename"] + ".md", "r")
 
     # convert the markdown to html
-    proc = markdown.Markdown(extensions=['mdx_math'])
+    proc = markdown.Markdown(extensions=['mdx_math', 'markdown.extensions.tables'])
     fr = f.read()
     f.close()
     entry = proc.convert(fr)
